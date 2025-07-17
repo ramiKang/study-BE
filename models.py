@@ -1,10 +1,21 @@
 # models.py - 데이터 모델
-from pydantic import BaseModel
-from typing import List
+from pydantic import BaseModel, Field
+from typing import List, Optional
+from enum import Enum
+
+class PosType(str, Enum):
+    NOUN = "noun"
+    VERB = "verb"
+    ADJECTIVE = "adjective"
+    ADVERB = "adverb"
+    PRONOUN = "pronoun"
+    PREPOSITION = "preposition"
+    CONJUNCTION = "conjunction"
+    INTERJECTION = "interjection"
 
 class WordForm(BaseModel):
     word: str
-    pos: str
+    pos: PosType
 
 class Example(BaseModel):
     sentence: str
@@ -13,16 +24,16 @@ class Example(BaseModel):
 class WordEntry(BaseModel):
     id: str
     word: str
-    shortMeaning: str
-    detailedMeaning: str
-    wordForms: List[WordForm]
+    meaning: str
+    description: Optional[str] = None
+    wordForms: Optional[List[WordForm]] = None
     examples: List[Example]
-    relatedWords: List[str]
+    relatedWords: Optional[List[str]] = None
 
 class WordEntryCreate(BaseModel):
     word: str
-    shortMeaning: str
-    detailedMeaning: str
-    wordForms: List[WordForm] = []
-    examples: List[Example] = []
-    relatedWords: List[str] = []
+    meaning: str
+    description: Optional[str] = None
+    wordForms: Optional[List[WordForm]] = None
+    examples: List[Example] = Field(default_factory=list)
+    relatedWords: Optional[List[str]] = None

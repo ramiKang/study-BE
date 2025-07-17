@@ -5,11 +5,11 @@ def word_helper(word) -> dict:
     return {
         "id": str(word["_id"]),
         "word": word["word"],
-        "shortMeaning": word["shortMeaning"],
-        "detailedMeaning": word["detailedMeaning"],
-        "wordForms": word["wordForms"],
+        "meaning": word.get("meaning", word.get("shortMeaning")),
+        "description": word.get("description", word.get("detailedMeaning")),
+        "wordForms": word.get("wordForms"),
         "examples": word["examples"],
-        "relatedWords": word["relatedWords"]
+        "relatedWords": word.get("relatedWords")
     }
 
 def get_all_words():
@@ -23,6 +23,12 @@ def get_all_words():
 def create_word(word_data: dict):
     """새 단어 추가"""
     collection = get_collection()
+    
+    # 중복 단어 체크
+    existing_word = collection.find_one({"word": word_data["word"]})
+    if existing_word:
+        raise ValueError(f"단어 '{word_data['word']}'가 이미 존재합니다.")
+    
     result = collection.insert_one(word_data)
     created_word = collection.find_one({"_id": result.inserted_id})
     return word_helper(created_word)
