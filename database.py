@@ -9,7 +9,7 @@ uri = os.getenv("MONGODB_URL")
 
 client = MongoClient(uri)
 DATABASE_NAME = "Wordbook"
-COLLECTION_NAME = "test-word"
+COLLECTION_NAME = "words"
 
 # 전역 변수
 client = None

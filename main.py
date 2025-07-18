@@ -1,5 +1,9 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
+from dotenv import load_dotenv
+
+# 환경변수 로드
+load_dotenv()
 
 import api
 from database import connect_to_mongo, close_mongo_connection, get_collection
