@@ -26,15 +26,21 @@ MongoDB와 OpenAI API를 활용한 단어 학습 관리 시스템의 백엔드 �
 
 ```
 workbook_BE_v2/
-├── main.py              # 메인 애플리케이션 및 서버 설정
-├── api.py               # 비즈니스 로직 및 데이터 처리
-├── database.py          # MongoDB 연결 및 관리
-├── models.py            # Pydantic 데이터 모델 정의
-├── routers.py           # API 라우터 및 엔드포인트
-├── openai_service.py    # OpenAI API 서비스
-├── migrate_data.py      # 데이터 마이그레이션 스크립트
-├── test_main.http       # API 테스트 파일
-└── .env                 # 환경 변수 파일
+├── app/
+│   ├── main.py                 # 메인 애플리케이션 및 서버 설정
+│   ├── core/
+│   │   └── database.py         # MongoDB 연결 및 관리
+│   ├── models/
+│   │   └── words.py            # 단어 관련 Pydantic 모델
+│   ├── services/
+│   │   ├── words_service.py    # 단어 CRUD 비즈니스 로직
+│   │   └── openai_service.py   # OpenAI API 서비스
+│   ├── routers/
+│   │   └── words.py            # 단어 관련 API 엔드포인트
+│   └── utils/                  # 유틸리티 함수 (향후 확장)
+├── migrate_data.py             # 데이터 마이그레이션 스크립트
+├── test_main.http              # API 테스트 파일
+└── .env                        # 환경 변수 파일
 ```
 
 ## 🚀 주요 기능
@@ -77,10 +83,10 @@ OPENAI_API_KEY=your_openai_api_key
 ### 3. 서버 실행
 ```bash
 # 개발 서버 실행
-python main.py
+python app/main.py
 
 # 또는 uvicorn으로 실행
-uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 ```
 
 서버가 실행되면 `http://localhost:8000`에서 API에 접근할 수 있습니다.
@@ -107,12 +113,12 @@ curl -X POST "http://localhost:8000/words/generate" \
 
 ## 📄 주요 파일 설명
 
-- **`main.py`**: FastAPI 애플리케이션 초기화, CORS 설정, 라이프사이클 관리
-- **`models.py`**: 단어 데이터 구조를 정의하는 Pydantic 모델들
-- **`database.py`**: MongoDB 연결 설정 및 컬렉션 관리
-- **`api.py`**: 단어 CRUD 로직 및 AI 기반 단어 생성 로직
-- **`routers.py`**: HTTP 요청을 처리하는 FastAPI 라우터
-- **`openai_service.py`**: OpenAI API 호출 및 응답 처리
+- **`app/main.py`**: FastAPI 애플리케이션 초기화, CORS 설정, 라이프사이클 관리
+- **`app/models/words.py`**: 단어 데이터 구조를 정의하는 Pydantic 모델들
+- **`app/core/database.py`**: MongoDB 연결 설정 및 컬렉션 관리
+- **`app/services/words_service.py`**: 단어 CRUD 로직 및 AI 기반 단어 생성 로직
+- **`app/routers/words.py`**: HTTP 요청을 처리하는 FastAPI 라우터
+- **`app/services/openai_service.py`**: OpenAI API 호출 및 응답 처리
 
 ## 🔒 보안 고려사항
 
