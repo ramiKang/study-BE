@@ -8,22 +8,12 @@ client = OpenAI(
 )
 
 def generate_word_data(word: str) -> Dict:
-    """
-    OpenAI API를 사용하여 영단어 정보를 생성합니다.
-    
-    Args:
-        word (str): 영단어
-        
-    Returns:
-        Dict: 단어 정보 객체
-    """
-    
     prompt = f"""Generate a JSON object for the given word, following this schema:
 
 {{
   "word": "",
-  "meaning": "짧은 한국어 의미 (1-2단어)",
-  "description": "Provide a clear, detailed English explanation considering the computer science and research context.(100자 이내)",
+  "meaning": "짧은 한국어 의미를 1개 이상, 최대 5개까지 쉼표로 구분하여 작성 (예: 처리하다, 실행하다, 작동하다)",
+  "description": "Provide a detailed English explanation of up to 150 characters, focusing on its meaning in computer science and research contexts.",
   "wordForms": [
     {{"word": "", "pos": "noun|verb|adjective|adverb|pronoun|preposition|conjunction|interjection"}}
   ],
@@ -35,12 +25,12 @@ def generate_word_data(word: str) -> Dict:
 
 Rules:
 - Ensure JSON is valid.
-- meaning: short Korean meaning (1-3 words).
-- description: English explanation, NOT Korean, adapted to computer science context.
-- wordForms: common variations with POS chosen from: noun, verb, adjective, adverb, pronoun, preposition, conjunction, interjection.
-- examples: 1 to 1 examples, in natural academic English, each with a Korean translation.
-- relatedWords: 2 to 3 semantically related terms in English.
-- Do NOT add extra text, explanations, or comments outside the JSON.
+- meaning: include up to 5 short Korean meanings, separated by commas.
+- description: clear, detailed English explanation (max 150 characters), focusing on computer science usage.
+- wordForms: include only derived forms of the word (exclude the original word), each with a POS from the list.
+- examples: provide 1 academic English sentence with Korean translation.
+- relatedWords: provide 2 or 3 semantically related English words.
+- Do NOT add any extra text or comments outside the JSON.
 
 Word: {word}"""
 
@@ -48,7 +38,7 @@ Word: {word}"""
         response = client.chat.completions.create(
             model="gpt-4.1-mini",
             messages=[
-                {"role": "system", "content": "You are an expert in computer science and technical English. Your task is to provide accurate definitions and examples for English terms commonly used in computer science research. Return the result strictly in JSON format according to the provided schema."},
+                {"role": "system", "content": "You are an expert in computer science, cybersecurity, and technical English. Your task is to provide accurate definitions and examples for English terms commonly used in computer science and security research. Return the result strictly in JSON format according to the provided schema."},
                 {"role": "user", "content": prompt}
             ],
             max_tokens=1000,
@@ -83,15 +73,6 @@ Word: {word}"""
 
 
 def validate_word_data(word_data: Dict) -> bool:
-    """
-    생성된 단어 데이터가 올바른 형식인지 검증합니다.
-    
-    Args:
-        word_data (Dict): 검증할 단어 데이터
-        
-    Returns:
-        bool: 유효한 경우 True, 그렇지 않으면 False
-    """
     required_fields = ["word", "meaning", "examples"]
     
     # 필수 필드 확인

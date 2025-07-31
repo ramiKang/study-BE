@@ -23,7 +23,6 @@ def get_all_words():
     return words
 
 def create_word(word_data: dict):
-    """새 단어 추가"""
     collection = get_collection()
     
     # 중복 단어 체크
@@ -37,7 +36,6 @@ def create_word(word_data: dict):
 
 
 def delete_word(word_id: str):
-    """단어 삭제"""
     collection = get_collection()
 
     # ObjectId 유효성 검사
@@ -49,15 +47,6 @@ def delete_word(word_id: str):
 
 
 def create_word_with_ai(word: str) -> Dict:
-    """
-    OpenAI API를 사용하여 영단어 정보를 생성하고 데이터베이스에 추가합니다.
-    
-    Args:
-        word (str): 영단어
-        
-    Returns:
-        Dict: 생성된 단어 정보 객체
-    """
     try:
         # OpenAI API로 단어 데이터 생성
         word_data = generate_word_data(word)

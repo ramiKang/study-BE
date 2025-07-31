@@ -12,7 +12,6 @@ class WordGenerateRequest(BaseModel):
 
 @router.get("/words", response_model=List[WordEntry])
 async def get_all_words():
-    """1. 전체 데이터를 가져오는 API"""
     try:
         return api.get_all_words()
     except Exception as e:
@@ -23,7 +22,6 @@ async def get_all_words():
 
 @router.post("/words", response_model=WordEntry, status_code=status.HTTP_201_CREATED)
 async def create_word(word_data: WordEntryCreate):
-    """2. 데이터를 추가하는 API"""
     try:
         return api.create_word(word_data.dict())
     except Exception as e:
@@ -34,7 +32,6 @@ async def create_word(word_data: WordEntryCreate):
 
 @router.delete("/words/{word_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_word(word_id: str):
-    """3. 데이터를 삭제하는 API"""
     try:
         success = api.delete_word(word_id)
         if not success:
@@ -53,7 +50,6 @@ async def delete_word(word_id: str):
 
 @router.post("/words/generate", response_model=WordEntry, status_code=status.HTTP_201_CREATED)
 async def generate_word_with_ai(request: WordGenerateRequest):
-    """4. OpenAI API를 사용하여 영단어 정보를 자동 생성하고 추가하는 API"""
     try:
         result = api.create_word_with_ai(request.word)
         return result

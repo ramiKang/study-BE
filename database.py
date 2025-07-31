@@ -18,7 +18,6 @@ collection = None
 
 
 def connect_to_mongo():
-    """MongoDB에 연결"""
     global client, db, collection
 
     try:
@@ -43,13 +42,11 @@ def connect_to_mongo():
 
 
 def close_mongo_connection():
-    """MongoDB 연결 종료"""
     if client:
         client.close()
         print("MongoDB 연결 종료")
 
 
 def get_collection():
-    """컬렉션 반환"""
     return collection
 
